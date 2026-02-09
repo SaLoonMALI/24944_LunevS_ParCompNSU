@@ -26,7 +26,10 @@ using namespace std;
 
 int main() {
     vector<Fpdt> data(arr_size);
+    vector<Fpdt> partial_sums(chunk_quantity, 0.0);
     vector<thread> threads;
+
+    Fpdt sum = 0.0;
 
     for (int i = 0; i < chunk_quantity; i++) {
     	// Chunk size calculation
@@ -35,10 +38,11 @@ int main() {
 
     	// Launch threads
     	// *Lambda function syntax: [](){};
-    	threads.emplace_back([start, end, &data]() {
+    	threads.emplace_back([start, end, &data, &partial_sums, i]() {
     		for (int j = start; j < end; j++) {
     			// Sine wave generation
     			data[j] = sin(2.0 * M_PI * j / (Fpdt)arr_size);
+    			partial_sums[i] += data[j];
     		}
     	});
     }
@@ -48,9 +52,10 @@ int main() {
        	thread.join();
     } // Loop through each thread
 
-    for (int i = 0; i < 100; i++) {
-    	cout << data[i * 10000] << endl;
+    for (int i = 0; i < chunk_quantity; i++) {
+    	sum += partial_sums[i];
     }
+    cout << sum << endl;
 
     return 0;
 }
