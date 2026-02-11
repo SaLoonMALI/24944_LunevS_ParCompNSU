@@ -36,7 +36,7 @@ int main() {
 
     	// Launch threads
     	// *Lambda function syntax: [](){};
-    	threads.emplace_back([start, end, &data, &partial_sums, i]() {
+    	threads.emplace_back([start, end, &data]() {
     		for (int j = start; j < end; j++) {
     			// Sine wave generation
     			data[j] = sin(2.0 * M_PI * j / (Fpdt)arr_size);
