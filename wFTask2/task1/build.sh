@@ -34,7 +34,7 @@ fi
 
 echo "=== Running Benchmark ==="
 
-THREADS=(2 4 6 8)
+THREADS=(1 2 4 7 8 16 20 40)
 SIZES=(20000 40000)
 
 OUTPUT_FILE="benchmark_results.txt"
