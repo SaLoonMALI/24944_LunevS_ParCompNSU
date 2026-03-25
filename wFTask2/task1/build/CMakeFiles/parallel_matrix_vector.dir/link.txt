@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/parallel_matrix_vector.dir/link.d CMakeFiles/parallel_matrix_vector.dir/main.cpp.o -o parallel_matrix_vector  /usr/lib/libgomp.so /usr/lib/libpthread.a

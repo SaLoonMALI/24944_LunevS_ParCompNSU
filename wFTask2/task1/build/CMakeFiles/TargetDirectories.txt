@@ -1,0 +1,3 @@
+/home/lemotru/Documents/code_p/NSU/oOP_HW/ParCompNSU/scLab2TTs/24944_LunevS_ParCompNSU/wFTask2/task1/build/CMakeFiles/parallel_matrix_vector.dir
+/home/lemotru/Documents/code_p/NSU/oOP_HW/ParCompNSU/scLab2TTs/24944_LunevS_ParCompNSU/wFTask2/task1/build/CMakeFiles/edit_cache.dir
+/home/lemotru/Documents/code_p/NSU/oOP_HW/ParCompNSU/scLab2TTs/24944_LunevS_ParCompNSU/wFTask2/task1/build/CMakeFiles/rebuild_cache.dir
