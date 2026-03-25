@@ -1,70 +1,69 @@
 // Sam Lunev. 2026. All Rights Reserved.
 
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 #include <omp.h>
 #include <fstream>
 #include <chrono>
 #include <cmath>
-#define VEC_SIZE 10000
+#include <cstdlib>   // for std::atoi
 
+#define VEC_SIZE 10000
 
 int main(int argc, char **argv)
 {
     int num_threads = 1;
     int size = VEC_SIZE;
-    
+
     if (argc >= 2) {
-        num_threads = atoi(argv[1]);
+        num_threads = std::atoi(argv[1]);
     }
     if (argc >= 3) {
-        size = atoi(argv[2]);
+        size = std::atoi(argv[2]);
     }
 
-    double **vec1 = new double*[VEC_SIZE];
-    double *vec2 = new double[VEC_SIZE];
-    double *res = new double[VEC_SIZE];
+    // Ensure OpenMP uses the requested number of threads
+    omp_set_num_threads(num_threads);
+
+    // Allocate main arrays
+    double **vec1 = new double*[size];
+    double *vec2 = new double[size];
+    double *res  = new double[size];
+
     auto start_time = std::chrono::steady_clock::now();
-    for (int i = 0; i < VEC_SIZE; i++)
+
+    // Initialize vec2 and res
+    for (int i = 0; i < size; i++)
     {
-        vec2[i] = VEC_SIZE - i;
-        res[i] = 0;
+        vec2[i] = size - i;
+        res[i]  = 0.0;
+        vec1[i] = nullptr; // good practice before assigning in parallel
     }
+
     auto end1 = std::chrono::steady_clock::now();
-    #pragma omp parallel
+
+    // Parallelize the outer loop over i
+    #pragma omp parallel for
+    for (int i = 0; i < size; i++)
     {
-        int num_threads = omp_get_num_threads();
-        int size_per_thread = VEC_SIZE / num_threads;
-        int thread_id = omp_get_thread_num();
-        int start = thread_id * size_per_thread;
-        int end = thread_id == num_threads - 1 ? VEC_SIZE : (thread_id + 1) * size_per_thread;
-        for (int i = start; i < end; i++)
+        vec1[i] = new double[size];
+        for (int y = 0; y < size; y++)
         {
-            vec1[i] = new double[VEC_SIZE];
-            for(int y = 0; y < VEC_SIZE; y++){
-                vec1[i][y] = double(y+1);
-                res[i] += vec2[y] * vec1[i][y];
-            }
+            vec1[i][y] = double(y + 1);
+            res[i]    += vec2[y] * vec1[i][y];
         }
     }
+
     auto end2 = std::chrono::steady_clock::now();
-    // for (int i = 0; i < VEC_SIZE; i++)
-    // {
-    //     for(int y = 0; y < VEC_SIZE; y++){
-    //         res[i] += vec2[y] * vec1[i][y];
-    //     }
-    // }
-    // std::ofstream file("res.txt", std::ios::out);
-    // for (int i = 0; i < VEC_SIZE; i++)
-    // {
-    //     file << res[i] << std::endl;
-    // }
+
     const std::chrono::duration<double> elapsed_seconds1(end1 - start_time);
     const std::chrono::duration<double> elapsed_seconds2(end2 - end1);
+
     std::cout << "Init time: " << elapsed_seconds1.count() << std::endl;
     std::cout << "Work time: " << elapsed_seconds2.count() << std::endl;
-    
-    for (int i = 0; i < VEC_SIZE; i++)
+
+    // Free allocated memory
+    for (int i = 0; i < size; i++)
     {
         delete[] vec1[i];
     }
@@ -72,6 +71,6 @@ int main(int argc, char **argv)
     delete[] vec1;
     delete[] vec2;
     delete[] res;
-    
+
     return 0;
 }
