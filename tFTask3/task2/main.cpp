@@ -56,7 +56,7 @@ public:
     void start(size_t num_threads) {
         std::lock_guard<std::mutex> lock(queue_mutex);
         is_running = true;
-        for (size_t i = 0; i < num_threads; ++i) {
+        for (size_t i = 0; i < num_threads; i++) {
             workers.emplace_back([this] {
                 while (is_running) {
                     std::function<void()> task;
@@ -107,7 +107,7 @@ std::uniform_real_distribution<> dis(0.0, 10.0);
 
 // Client functions with proper synchronization and random parameters
 void client_sin(ThreadPool<double>& pool, std::ofstream& out, std::mutex& mtx, int num_tasks) {
-    for (int i = 0; i < num_tasks; ++i) {
+    for (int i = 0; i < num_tasks; i++) {
         double param = dis(gen);
         auto fut = pool.enqueue([param]() { return fun_sin(param); });
         double res = fut.get();
@@ -119,7 +119,7 @@ void client_sin(ThreadPool<double>& pool, std::ofstream& out, std::mutex& mtx, i
 }
 
 void client_sqrt(ThreadPool<double>& pool, std::ofstream& out, std::mutex& mtx, int num_tasks) {
-    for (int i = 0; i < num_tasks; ++i) {
+    for (int i = 0; i < num_tasks; i++) {
         double param = dis(gen);
         auto fut = pool.enqueue([param]() { return fun_sqrt(param); });
         double res = fut.get();
@@ -131,7 +131,7 @@ void client_sqrt(ThreadPool<double>& pool, std::ofstream& out, std::mutex& mtx, 
 }
 
 void client_pow(ThreadPool<double>& pool, std::ofstream& out, std::mutex& mtx, int num_tasks) {
-    for (int i = 0; i < num_tasks; ++i) {
+    for (int i = 0; i < num_tasks; i++) {
         double base = dis(gen);
         double exp = dis(gen);
         auto fut = pool.enqueue([base, exp]() { return fun_pow(base, exp); });
