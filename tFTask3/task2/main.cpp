@@ -1,4 +1,4 @@
-// Sam Lunev. 2026.
+// Sam Lunev. 2026. All Rights Reserved.
 #include <chrono>
 #include <vector>
 #include <queue>
